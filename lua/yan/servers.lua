@@ -9,6 +9,7 @@ local servers = {
   'cssls',
   'gopls',
   'lua_ls',
+  'phpactor',
 }
 
 return servers

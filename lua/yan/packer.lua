@@ -15,6 +15,63 @@ return require('packer').startup(function(use)
   	end
   }
 
+  use ({
+  "stevearc/conform.nvim", 
+  event = {"BufRead", "BufNewFile"},
+  config = function()
+    local conform = require('conform')  
+    conform.setup({
+      formatters_by_ft = {
+        javascript = {"prettier"},
+        typescript = {"prettier"},
+        typescriptreact = {"prettier"},
+        javascriptreact = {"prettier"},
+        json = {"prettier"},
+        html = {"prettier"},
+        css = {"prettier"},
+        scss = {"prettier"},
+
+},
+  format_on_save = {
+  lsp_fallback = true,
+  async = false,
+  timeout_ms = 500,
+},
+    })
+
+    vim.keymap.set({"n", "v"}, "<leader>mp", function()
+      conform.format({
+        lsp_fallback = true,
+        async = false,
+        timeout_ms = 500,
+      })
+    end, {desc = "Format code"})
+  end,
+})
+
+  use({
+    "mfussenegger/nvim-lint",
+    event = {"BufRead", "BufNewFile"},
+    config = function()
+      local lint = require('lint')
+
+      lint.linters_by_ft = {
+        javascript = {"eslint_d"},
+        typescript = {"eslint_d"},
+        typescriptreact = {"eslint_d"},
+        javascriptreact = {"eslint_d"},
+      }
+
+      local lint_augroup = vim.api.nvim_create_augroup("lint", {clear = true})
+
+
+
+      vim.keymap.set("n", "<leader>l", function()
+        lint.try_lint()
+      end, {desc = "Lint code"})
+    end,
+  })
+
  use ( 'nvim-treesitter/nvim-treesitter', {run = ':TSUpdate'})
 
  use {
